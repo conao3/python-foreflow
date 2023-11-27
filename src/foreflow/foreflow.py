@@ -5,6 +5,7 @@ from typing import Any
 from typing import Callable
 from typing import TypeVar
 
+import jmespath
 import pydantic
 
 from . import types
@@ -72,7 +73,14 @@ class Foreflow:
                     )
 
                 if cur_state.parameters is not None:
-                    cur_inpt = cur_state.parameters
+                    cur_inpt = {
+                        (key[:-2] if key.endswith(".$") else key): (
+                            jmespath.search(val, cur_inpt)
+                            if key.endswith(".$")
+                            else val
+                        )
+                        for key, val in cur_state.parameters.items()
+                    }
 
                 ret = resource(inpt_model.model_validate(cur_inpt))
 

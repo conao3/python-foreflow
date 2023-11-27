@@ -109,8 +109,8 @@ States:
     Type: Task
     Resource: Foreflow::Callable::Invoke
     Parameters:
-      Status: "NG"
-      StatusName: "Not Good"
+      Status: NG
+      StatusName: Not Good
     Next: End
   End:
     Type: Succeed
@@ -124,5 +124,42 @@ States:
 
         state_machine = types.StateMachine.model_validate(yaml.safe_load(state_machine))
         ret = app.execute(state_machine, {})
+
+        assert ret.model_dump(mode="json", by_alias=True) == expected
+
+    def test_f286e300(self) -> None:
+        app = foreflow.Foreflow()
+
+        @app.resource("Foreflow::Callable::Invoke")
+        def invoke(inpt: Inpt_0d88e907) -> Outpt_5cca9516:
+            return Outpt_5cca9516(
+                payload={
+                    "Status": inpt.status,
+                    "StatusName": inpt.status_name,
+                },
+            )
+
+        state_machine = """\
+StartAt: FirstState
+States:
+  FirstState:
+    Type: Task
+    Resource: Foreflow::Callable::Invoke
+    Parameters:
+      Status.$: StatusId
+      StatusName: Not Good
+    Next: End
+  End:
+    Type: Succeed
+"""
+        expected = {
+            "Payload": {
+                "Status": "NG",
+                "StatusName": "Not Good",
+            },
+        }
+
+        state_machine = types.StateMachine.model_validate(yaml.safe_load(state_machine))
+        ret = app.execute(state_machine, {"StatusId": "NG"})
 
         assert ret.model_dump(mode="json", by_alias=True) == expected
