@@ -2,7 +2,7 @@
 
 ## Description
 
-Subset of AWS Step Functions implemented in Python.
+Subset of [AWS Step Functions](https://docs.aws.amazon.com/step-functions/latest/dg/concepts-states.html) implemented in Python.
 
 ```python
 app = foreflow.Foreflow()
