@@ -13,6 +13,9 @@ class StateTask(util.pydantic.PascalModel):
     type: Literal["Task"]
     resource: str
     parameters: dict[str, Any] | None = None
+
+    result_path: str | None = ""
+
     next: str
 
 

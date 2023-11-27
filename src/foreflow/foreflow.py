@@ -8,6 +8,7 @@ from typing import TypeVar
 import pydantic
 
 from . import types
+from . import util
 
 S = TypeVar("S", bound=pydantic.BaseModel)
 R = TypeVar("R", bound=pydantic.BaseModel)
@@ -77,10 +78,21 @@ class Foreflow:
                         f"Resource '{cur_state.resource}' returned value is not an instance of '{outpt_model.__name__}'",
                     )
 
+                ret_dict = ret.model_dump(by_alias=True)
+
+                if cur_state.result_path is not None:
+                    if cur_state.result_path == "":
+                        cur_inpt = ret_dict
+                    else:
+                        util.jmespath.set_value(
+                            cur_inpt,
+                            cur_state.result_path,
+                            ret_dict,
+                        )
+
                 cur_state = state_machine.states[cur_state.next]
-                cur_inpt = ret.model_dump(by_alias=True)
 
             else:
                 raise ValueError(f"Unknown state type '{cur_state.type}'")
 
-        return ret
+        return pydantic.RootModel(dict[str, Any]).model_validate(cur_inpt)

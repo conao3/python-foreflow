@@ -37,4 +37,7 @@ States:
         }
 
         obj = types.StateMachine.model_validate(yaml.safe_load(inpt))
-        assert obj.model_dump(mode="json", by_alias=True) == expected
+        assert (
+            obj.model_dump(mode="json", by_alias=True, exclude_defaults=True)
+            == expected
+        )

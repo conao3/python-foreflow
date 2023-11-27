@@ -49,3 +49,38 @@ States:
         ret = app.execute(state_machine, {})
 
         assert ret.model_dump(mode="json", by_alias=True) == expected
+
+    def test_bd65c858(self) -> None:
+        app = foreflow.Foreflow()
+
+        @app.resource("Foreflow::Callable::Invoke")
+        def invoke(inpt: Inpt_5cca9516) -> Outpt_5cca9516:
+            return Outpt_5cca9516(
+                payload={
+                    "Status": "SUCCESS",
+                },
+            )
+
+        inpt = """\
+StartAt: FirstState
+States:
+  FirstState:
+    Type: Task
+    Resource: Foreflow::Callable::Invoke
+    ResultPath: bd65c858
+    Next: End
+  End:
+    Type: Succeed
+"""
+        expected = {
+            "bd65c858": {
+                "Payload": {
+                    "Status": "SUCCESS",
+                },
+            },
+        }
+
+        state_machine = types.StateMachine.model_validate(yaml.safe_load(inpt))
+        ret = app.execute(state_machine, {})
+
+        assert ret.model_dump(mode="json", by_alias=True) == expected
