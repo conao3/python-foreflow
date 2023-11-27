@@ -9,19 +9,21 @@ from . import types
 from . import util
 
 
+class Inpt_5cca9516(util.pydantic.PascalModel):
+    pass
+
+
+class Outpt_5cca9516(util.pydantic.PascalModel):
+    payload: dict[str, Any]
+
+
 class TestMain:
     def test_5cca9516(self) -> None:
         app = foreflow.Foreflow()
 
-        class Inpt(util.pydantic.PascalModel):
-            pass
-
-        class Outpt(util.pydantic.PascalModel):
-            payload: dict[str, Any]
-
         @app.resource("Foreflow::Callable::Invoke")
-        def invoke(inpt: Inpt) -> Outpt:
-            return Outpt(
+        def invoke(inpt: Inpt_5cca9516) -> Outpt_5cca9516:
+            return Outpt_5cca9516(
                 payload={
                     "Status": "SUCCESS",
                 },
@@ -44,5 +46,6 @@ States:
         }
 
         state_machine = types.StateMachine.model_validate(yaml.safe_load(inpt))
+        ret = app.execute(state_machine, {})
 
-        assert app.execute(state_machine, {}) == expected
+        assert ret.model_dump(mode="json", by_alias=True) == expected

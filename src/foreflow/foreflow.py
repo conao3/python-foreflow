@@ -31,10 +31,11 @@ class Foreflow:
         self,
         state_machine: types.StateMachine,
         inpt: dict[str, Any],
-    ) -> dict[str, Any]:
+    ) -> pydantic.BaseModel:
         if not state_machine.start_at in state_machine.states:
             raise ValueError(f"StartAt state '{state_machine.start_at}' not found")
 
+        ret = pydantic.RootModel(dict[str, Any]).model_validate({})
         cur_inpt = inpt
         cur_state = state_machine.states[state_machine.start_at]
 
@@ -82,4 +83,4 @@ class Foreflow:
             else:
                 raise ValueError(f"Unknown state type '{cur_state.type}'")
 
-        return cur_inpt
+        return ret
