@@ -1,5 +1,11 @@
 # python-foreflow
 
+## Install
+
+```bash
+pip install foreflow
+```
+
 ## Description
 
 Subset of [AWS Step Functions](https://docs.aws.amazon.com/step-functions/latest/dg/concepts-states.html) implemented in Python.
