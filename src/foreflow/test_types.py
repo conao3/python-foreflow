@@ -8,6 +8,7 @@ from . import types
 class TestMain:
     def test_ab9ada04(self) -> None:
         inpt = """\
+StartAt: FirstState
 States:
   FirstState:
     Type: Task
@@ -19,6 +20,7 @@ States:
     Type: Succeed
 """
         expected = {
+            "StartAt": "FirstState",
             "States": {
                 "FirstState": {
                     "Type": "Task",

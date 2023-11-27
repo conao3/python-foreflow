@@ -24,4 +24,5 @@ State = Annotated[StateTask | StateSucceed, pydantic.Field(discriminator="type")
 
 
 class StateMachine(util.pydantic.PascalModel):
+    start_at: str
     states: dict[str, State]
