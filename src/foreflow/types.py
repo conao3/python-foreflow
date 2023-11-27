@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from typing import Annotated, Literal, Any
+from typing import Annotated
+from typing import Any
+from typing import Literal
+
 import pydantic
 
 from . import util
