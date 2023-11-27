@@ -71,6 +71,9 @@ class Foreflow:
                         f"Resource '{cur_state.resource}' 'return' type hint is not a subclass of pydantic.BaseModel",
                     )
 
+                if cur_state.parameters is not None:
+                    cur_inpt = cur_state.parameters
+
                 ret = resource(inpt_model.model_validate(cur_inpt))
 
                 if not isinstance(ret, outpt_model):
